@@ -1,0 +1,97 @@
+/**
+ * Creative Template Styling
+ */
+
+.template-creative {
+    --cre-bg: #121212;
+    --cre-accent: #ff0055;
+    --cre-text: #ffffff;
+    --cre-muted: #888888;
+    --cre-surface: #1a1a1a;
+    
+    background-color: var(--cre-bg);
+    color: var(--cre-text);
+    display: flex;
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+}
+
+.template-creative .creative-sidebar {
+    width: 30%;
+    padding: 4rem;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    border-right: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.template-creative .creative-sidebar h1 {
+    font-size: 3.5rem;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: -0.05em;
+}
+
+.template-creative .creative-sidebar #hero-title {
+    color: var(--cre-accent);
+    font-weight: 700;
+    font-size: 1.25rem;
+}
+
+.template-creative .creative-content {
+    width: 70%;
+    padding: 4rem 6rem;
+}
+
+.template-creative .section-tag {
+    font-size: 0.75rem;
+    color: var(--cre-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    margin-bottom: 2rem;
+}
+
+.template-creative .creative-section {
+    margin-bottom: 8rem;
+}
+
+/* Creative Projects */
+.template-creative .creative-projects-grid {
+    display: grid;
+    gap: 3rem;
+}
+
+.template-creative .project-card {
+    background: var(--cre-surface);
+    padding: 3rem;
+    border-radius: 4px;
+    border-left: 4px solid var(--cre-accent);
+    transition: transform 0.3s ease;
+}
+
+.template-creative .project-card:hover {
+    transform: translateX(10px);
+}
+
+.template-creative .project-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+}
+
+@media (max-width: 1024px) {
+    .template-creative {
+        flex-direction: column;
+    }
+    .template-creative .creative-sidebar,
+    .template-creative .creative-content {
+        width: 100%;
+        height: auto;
+        position: static;
+        padding: 3rem 2rem;
+    }
+}

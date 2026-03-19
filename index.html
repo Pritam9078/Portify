@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portify | Build Your Portfolio in Minutes</title>
+    <meta name="description" content="The world's easiest portfolio builder for professionals. Create, customize, and showcase your work with world-class design.">
+    
+    <!-- CSS Dependencies -->
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/main.css">
+    
+    <!-- Icons & Fonts -->
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+</head>
+<body class="loading">
+
+    <!-- Preloader Overlay -->
+    <div id="preloader">
+        <div class="preloader-content">
+            <div class="preloader-logo">P</div>
+            <div class="preloader-title">Portify</div>
+            <div class="loader-line"></div>
+        </div>
+    </div>
+
+    <div class="bg-grid"></div>
+
+    <!-- 1. Navbar -->
+    <nav class="navbar">
+        <div class="container nav-content">
+            <a href="#" class="logo">
+                <div class="logo-icon">P</div>
+                <span>Portify</span>
+            </a>
+            
+            <div class="nav-links">
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#showcase" class="nav-link">Templates</a>
+                <a href="#how-it-works" class="nav-link">How it Works</a>
+                <a href="login.html" class="nav-link">Login</a>
+                
+                <div class="nav-actions">
+                    <a href="signup.html" class="btn btn-primary btn-sm">Get Started Free</a>
+                    <button id="theme-toggle" class="icon-btn" onclick="Utils.toggleTheme()">
+                        <iconify-icon id="theme-toggle-icon" icon="solar:sun-bold"></iconify-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <!-- 2. Hero Section -->
+        <section class="hero">
+            <div class="container hero-grid">
+                <div class="hero-content">
+                    <div class="reveal">
+                        <span class="text-xs uppercase text-muted mb-1 d-block font-bold">✨ Build your career identity</span>
+                        <h1 class="h-xl mb-1">Build Your Portfolio <span class="gradient-text">in Minutes</span></h1>
+                        <p class="text-lg mb-2">Create a professional, modern portfolio that stands out. No coding, no hassle, just your creativity.</p>
+                        
+                        <div class="hero-actions">
+                            <a href="signup.html" class="btn btn-primary lg">Get Started Free</a>
+                            <a href="#showcase" class="btn btn-secondary lg">View Showcase</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="hero-visual reveal">
+                    <div class="mockup-wrapper">
+                        <div class="mockup-header">
+                            <span></span><span></span><span></span>
+                        </div>
+                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=1600" alt="Dashboard Preview" class="mockup-img">
+                    </div>
+                    <div class="orb orb-primary"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Social Proof -->
+        <section class="social-proof reveal">
+            <div class="container">
+                <p class="text-xs text-muted uppercase font-bold tracking-widest">Trusted by creators from world-class teams</p>
+                <div class="logos">
+                    <iconify-icon icon="logos:google-icon" title="Google"></iconify-icon>
+                    <iconify-icon icon="logos:vercel-icon" title="Vercel"></iconify-icon>
+                    <iconify-icon icon="logos:notion-icon" title="Notion"></iconify-icon>
+                    <iconify-icon icon="logos:figma" title="Figma"></iconify-icon>
+                    <iconify-icon icon="logos:stripe" title="Stripe"></iconify-icon>
+                    <iconify-icon icon="logos:linear" title="Linear"></iconify-icon>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Features Section -->
+        <section id="features" class="features">
+            <div class="container">
+                <div class="section-badge text-center reveal">What we offer</div>
+                <h2 class="h-lg text-center mb-1 reveal">Powerful features to help you <br>grow professionally</h2>
+                
+                <div class="features-grid">
+                    <div class="feature-card reveal">
+                        <div class="feature-icon">
+                            <iconify-icon icon="solar:pen-new-square-bold"></iconify-icon>
+                        </div>
+                        <h3 class="h-sm mb-1">Portfolio Builder</h3>
+                        <p class="text-secondary">Intuitive interface to enter your skills, education, and projects effortlessly.</p>
+                    </div>
+                    
+                    <div class="feature-card reveal">
+                        <div class="feature-icon">
+                            <iconify-icon icon="solar:layers-minimalistic-bold"></iconify-icon>
+                        </div>
+                        <h3 class="h-sm mb-1">Multiple Templates</h3>
+                        <p class="text-secondary">Choose from professional designs tailored for developers and creatives.</p>
+                    </div>
+                    
+                    <div class="feature-card reveal">
+                        <div class="feature-icon">
+                            <iconify-icon icon="solar:eye-bold"></iconify-icon>
+                        </div>
+                        <h3 class="h-sm mb-1">Live Preview</h3>
+                        <p class="text-secondary">See your portfolio take shape in real-time as you type your information.</p>
+                    </div>
+                    
+                    <div class="feature-card reveal">
+                        <div class="feature-icon">
+                            <iconify-icon icon="solar:file-download-bold"></iconify-icon>
+                        </div>
+                        <h3 class="h-sm mb-1">Export Everywhere</h3>
+                        <p class="text-secondary">Download your site as a standalone HTML file or save as professional PDF.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Showcase Section -->
+        <section id="showcase" class="showcase">
+            <div class="container">
+                <div class="showcase-row reveal">
+                    <div class="showcase-content">
+                        <h2 class="h-lg mb-1">Crafted for <br>Modern Professionals</h2>
+                        <p class="text-lg mb-2">Our templates balance personality with professionalism, ensuring your first impression is always the right one.</p>
+                        <ul class="check-list">
+                            <li><iconify-icon icon="solar:check-circle-bold"></iconify-icon> One-click template switching</li>
+                            <li><iconify-icon icon="solar:check-circle-bold"></iconify-icon> Automatic dark mode support</li>
+                            <li><iconify-icon icon="solar:check-circle-bold"></iconify-icon> Optimized for SEO and performance</li>
+                        </ul>
+                    </div>
+                    <div class="showcase-img">
+                        <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=1200" alt="Template Preview">
+                    </div>
+                </div>
+
+                <div class="showcase-row reveal">
+                    <div class="showcase-content">
+                        <h2 class="h-lg mb-1">Focus on Your Work, <br>We'll Handle the Rest</h2>
+                        <p class="text-lg mb-2">Stop fighting with CSS. Just enter your details and our engine generates a pixel-perfect site instantly.</p>
+                        <a href="signup.html" class="btn btn-secondary">Try the Builder</a>
+                    </div>
+                    <div class="showcase-img">
+                        <img src="https://images.unsplash.com/photo-1542744094-3a31f272c490?auto=format&fit=crop&q=80&w=1200" alt="Process Preview">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. How It Works -->
+        <section id="how-it-works" class="how-it-works bg-surface">
+            <div class="container">
+                <div class="section-badge text-center reveal">Process</div>
+                <h2 class="h-lg text-center mb-1 reveal">Build your site in three simple steps</h2>
+                
+                <div class="steps-grid">
+                    <div class="step-card reveal">
+                        <div class="step-num">1</div>
+                        <h3 class="h-sm mb-1">Enter Data</h3>
+                        <p class="text-secondary">Fill in your professional experience, education, and key projects.</p>
+                    </div>
+                    
+                    <div class="step-card reveal">
+                        <div class="step-num">2</div>
+                        <h3 class="h-sm mb-1">Choose Template</h3>
+                        <p class="text-secondary">Select a design that best represents your professional style.</p>
+                    </div>
+                    
+                    <div class="step-card reveal">
+                        <div class="step-num">3</div>
+                        <h3 class="h-sm mb-1">Generate & Export</h3>
+                        <p class="text-secondary">Get a live portfolio instantly and download it for free.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. CTA Section -->
+        <section class="container pb-xl">
+            <div class="cta-block reveal">
+                <h2 class="h-lg">Start Building Your Portfolio Today</h2>
+                <p>Join thousands of professionals showcasing their worth with Portify.</p>
+                <div class="cta-btns">
+                    <a href="signup.html" class="btn btn-secondary btn-lg">Get Started Free</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 8. Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-info">
+                    <a href="#" class="logo">
+                        <div class="logo-icon">P</div>
+                        <span>Portify</span>
+                    </a>
+                    <p>The world's easiest portfolio builder. Empowering professionals since 2024.</p>
+                </div>
+                
+                <div class="footer-links-grid">
+                    <div class="footer-column">
+                        <h4>Product</h4>
+                        <ul>
+                            <li><a href="#features">Features</a></li>
+                            <li><a href="#showcase">Templates</a></li>
+                            <li><a href="form.html">Builder</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Resources</h4>
+                        <ul>
+                            <li><a href="#">Documentation</a></li>
+                            <li><a href="#">Help Center</a></li>
+                            <li><a href="#">Blog</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Company</h4>
+                        <ul>
+                            <li><a href="#">About</a></li>
+                            <li><a href="#">Twitter</a></li>
+                            <li><a href="#">Github</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2026 Portify Platform. All rights reserved.</p>
+                <div class="social-links">
+                    <a href="#"><iconify-icon icon="mdi:twitter"></iconify-icon></a>
+                    <a href="#"><iconify-icon icon="mdi:github"></iconify-icon></a>
+                    <a href="#"><iconify-icon icon="mdi:linkedin"></iconify-icon></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/utils.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portify Dashboard | Control Panel</title>
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <script src="js/utils.js"></script>
+    <script>
+        Utils.requireAuth();
+        Utils.initTheme();
+    </script>
+</head>
+<body data-theme="light">
+    <div class="dashboard-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">Portify</div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="sidebar-label">Main Menu</div>
+                <a href="dashboard.html" class="sidebar-link active">
+                    <iconify-icon icon="solar:home-smile-bold-duotone"></iconify-icon>
+                    Dashboard
+                </a>
+                <a href="form.html" class="sidebar-link">
+                    <iconify-icon icon="solar:pen-new-square-bold-duotone"></iconify-icon>
+                    Portfolio Builder
+                </a>
+                <a href="#" class="sidebar-link">
+                    <iconify-icon icon="solar:folder-bold-duotone"></iconify-icon>
+                    My Projects
+                </a>
+                <a href="#" class="sidebar-link">
+                    <iconify-icon icon="solar:gallery-bold-duotone"></iconify-icon>
+                    Templates
+                </a>
+                
+                <div class="sidebar-label">Insights</div>
+                <a href="#" class="sidebar-link">
+                    <iconify-icon icon="solar:chart-square-bold-duotone"></iconify-icon>
+                    Analytics
+                </a>
+                
+                <div class="sidebar-label">Account</div>
+                <a href="#" class="sidebar-link">
+                    <iconify-icon icon="solar:settings-bold-duotone"></iconify-icon>
+                    Settings
+                </a>
+                <a href="#" class="sidebar-link" id="export-btn">
+                    <iconify-icon icon="solar:download-bold-duotone"></iconify-icon>
+                    Export Portfolio
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-profile-mini">
+                    <div class="avatar" id="user-avatar">AD</div>
+                    <div class="user-info-mini">
+                        <div class="user-name" id="user-display-name">Alex Doe</div>
+                        <div class="user-status">Free Plan</div>
+                    </div>
+                    <button class="icon-btn" id="logout-btn">
+                        <iconify-icon icon="solar:logout-bold-duotone"></iconify-icon>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Wrapper -->
+        <div class="main-wrapper">
+            <!-- Top Navbar -->
+            <header class="top-nav">
+                <div class="nav-left">
+                    <div class="nav-search">
+                        <iconify-icon icon="solar:magnifer-linear" class="search-icon"></iconify-icon>
+                        <input type="text" class="search-input" placeholder="Search for projects, settings...">
+                    </div>
+                </div>
+                
+                <div class="nav-actions">
+                    <button class="icon-btn" id="theme-toggle" onclick="Utils.toggleTheme()">
+                        <iconify-icon icon="solar:sun-bold-duotone" id="theme-toggle-icon"></iconify-icon>
+                    </button>
+                    <button class="icon-btn">
+                        <iconify-icon icon="solar:bell-bold-duotone"></iconify-icon>
+                    </button>
+                    <button class="icon-btn" onclick="Utils.logout()" title="Logout">
+                        <iconify-icon icon="solar:logout-bold-duotone"></iconify-icon>
+                    </button>
+                    <div class="avatar" id="nav-user-avatar" style="background-color: var(--secondary); cursor: pointer;">User</div>
+                </div>
+            </header>
+
+            <!-- Main Content Area -->
+            <main class="content-area">
+                <!-- Welcome Header -->
+                <section class="welcome-header">
+                    <h1 class="welcome-title">Welcome back, <span id="greet-name">Pritam</span> 👋</h1>
+                    <p class="welcome-subtitle">Manage and build your professional portfolio from your dashboard.</p>
+                </section>
+
+                <div class="main-grid">
+                    <div class="main-column">
+                        <!-- Stats Grid -->
+                        <div class="stats-grid">
+                            <div class="card stat-card">
+                                <div class="stat-icon purple">
+                                    <iconify-icon icon="solar:folder-bold"></iconify-icon>
+                                </div>
+                                <div class="stat-details">
+                                    <h4>Projects</h4>
+                                    <div class="stat-value" id="stat-projects">0</div>
+                                </div>
+                            </div>
+                            <div class="card stat-card">
+                                <div class="stat-icon blue">
+                                    <iconify-icon icon="solar:star-bold"></iconify-icon>
+                                </div>
+                                <div class="stat-details">
+                                    <h4>Skills</h4>
+                                    <div class="stat-value" id="stat-skills">0</div>
+                                </div>
+                            </div>
+                            <div class="card stat-card">
+                                <div class="stat-icon amber">
+                                    <iconify-icon icon="solar:case-bold"></iconify-icon>
+                                </div>
+                                <div class="stat-details">
+                                    <h4>Experience</h4>
+                                    <div class="stat-value" id="stat-experience">0</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Recent Projects -->
+                        <div class="card mb-1-5">
+                            <div class="d-flex justify-between align-center mb-1">
+                                <h3 class="section-title">Recent Projects</h3>
+                                <a href="form.html" class="btn btn-secondary btn-sm">Manage All</a>
+                            </div>
+                            <div id="recent-projects-list" class="activity-list">
+                                <!-- Projects will be injected here -->
+                                <p class="text-muted text-center py-2">No projects added yet. Start by adding one in the builder!</p>
+                            </div>
+                        </div>
+
+                        <!-- Template Selection Preview -->
+                        <div class="card">
+                            <h3 class="section-title mb-1">Active Template</h3>
+                            <div class="d-flex gap-1 align-center">
+                                <div style="width: 120px; height: 80px; background-color: var(--bg-main); border-radius: var(--radius-sm); border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: center;">
+                                    <iconify-icon icon="solar:gallery-bold" style="font-size: 24px; color: var(--text-muted);"></iconify-icon>
+                                </div>
+                                <div>
+                                    <p class="font-bold mb-0-25" id="active-template-name">Modern Minimalist</p>
+                                    <p class="text-xs text-muted mb-0-75">Your current portfolio template.</p>
+                                    <a href="form.html?section=templates" class="btn btn-outline btn-sm">Change Template</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="side-column">
+                        <!-- Portfolio Completion -->
+                        <div class="card mb-1-5">
+                            <div class="completion-widget">
+                                <div class="completion-header">
+                                    <h3 class="section-title" style="font-size: 0.875rem;">Completion Status</h3>
+                                    <span class="completion-percent" id="completion-percent">0%</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="completion-fill" style="width: 0%;"></div>
+                                </div>
+                                <div class="completion-items" id="completion-items">
+                                    <!-- Items with dots will be injected here -->
+                                    <div class="completion-item">
+                                        <div class="dot" id="dot-basic"></div>
+                                        <span>Basic Information</span>
+                                    </div>
+                                    <div class="completion-item">
+                                        <div class="dot" id="dot-about"></div>
+                                        <span>About Me Section</span>
+                                    </div>
+                                    <div class="completion-item">
+                                        <div class="dot" id="dot-projects"></div>
+                                        <span>At least 1 Project</span>
+                                    </div>
+                                    <div class="completion-item">
+                                        <div class="dot" id="dot-skills"></div>
+                                        <span>Skills Listed</span>
+                                    </div>
+                                    <div class="completion-item">
+                                        <div class="dot" id="dot-social"></div>
+                                        <span>Social Links</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="form.html" class="btn btn-primary btn-full">Continue Editing</a>
+                        </div>
+
+                        <!-- Quick Actions -->
+                        <div class="card actions-card">
+                            <h3 class="section-title mb-1">Quick Actions</h3>
+                            <div class="actions-list">
+                                <a href="preview.html" class="quick-action-btn">
+                                    <div class="action-icon-circle">
+                                        <iconify-icon icon="solar:eye-bold"></iconify-icon>
+                                    </div>
+                                    <span class="action-name">Preview</span>
+                                </a>
+                                <a href="form.html?section=projects" class="quick-action-btn">
+                                    <div class="action-icon-circle">
+                                        <iconify-icon icon="solar:add-circle-bold"></iconify-icon>
+                                    </div>
+                                    <span class="action-name">Add Project</span>
+                                </a>
+                                <a href="#" class="quick-action-btn" id="share-portfolio">
+                                    <div class="action-icon-circle">
+                                        <iconify-icon icon="solar:share-bold"></iconify-icon>
+                                    </div>
+                                    <span class="action-name">Share</span>
+                                </a>
+                                <a href="#" class="quick-action-btn" id="export-json">
+                                    <div class="action-icon-circle">
+                                        <iconify-icon icon="solar:code-file-bold"></iconify-icon>
+                                    </div>
+                                    <span class="action-name">Export JSON</span>
+                                </a>
+                                <a href="#" class="quick-action-btn" id="download-html">
+                                    <div class="action-icon-circle">
+                                        <iconify-icon icon="solar:globus-bold"></iconify-icon>
+                                    </div>
+                                    <span class="action-name">Local HTML</span>
+                                </a>
+                                <a href="#" class="quick-action-btn" id="export-pdf" onclick="window.open('preview.html#print', '_blank')">
+                                    <div class="action-icon-circle">
+                                        <iconify-icon icon="solar:file-download-bold"></iconify-icon>
+                                    </div>
+                                    <span class="action-name">Export PDF</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/data-manager.js"></script>
+    <script src="js/templates-config.js"></script>
+    <script src="js/export-manager.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

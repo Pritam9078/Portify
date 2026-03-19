@@ -1,0 +1,148 @@
+/**
+ * Portify Authentication Styles
+ */
+
+.auth-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-main);
+    padding: 4rem 2rem;
+    position: relative;
+    overflow-x: hidden;
+}
+
+.auth-container {
+    width: 100%;
+    max-width: 440px;
+    z-index: 10;
+}
+
+.auth-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: 28px;
+    padding: 3rem;
+    box-shadow: 0 40px 100px -20px rgba(0,0,0,0.1);
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+}
+
+.auth-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 2rem;
+    text-decoration: none;
+    color: var(--text-main);
+}
+
+.auth-logo img { width: 40px; }
+.auth-logo span { font-weight: 800; font-size: 1.75rem; font-family: 'Outfit'; }
+
+.auth-header h1 {
+    font-size: 2rem;
+    font-family: 'Outfit';
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+}
+
+.auth-header p {
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+}
+
+.auth-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon {
+    position: absolute;
+    left: 16px;
+    color: var(--text-muted);
+    font-size: 1.25rem;
+}
+
+.auth-form .form-control {
+    padding-left: 52px;
+    height: 56px;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 16px;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+}
+
+.password-strength {
+    margin-top: 8px;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+.strength-bar {
+    height: 4px;
+    background: var(--border-color);
+    border-radius: 2px;
+    margin-bottom: 4px;
+}
+
+.auth-error {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    padding: 12px;
+    border-radius: 12px;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 1.5rem;
+}
+
+.auth-footer {
+    text-align: center;
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+}
+
+.auth-footer a {
+    color: var(--primary);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.btn-block { width: 100%; }
+
+/* Orbs */
+.auth-orb {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    filter: blur(140px);
+    opacity: 0.15;
+    z-index: -1;
+}
+
+.auth-orb-1 { top: -200px; right: -200px; background: var(--primary); }
+.auth-orb-2 { bottom: -200px; left: -200px; background: var(--secondary); }

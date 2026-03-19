@@ -1,0 +1,73 @@
+/**
+ * Minimal Template Styling
+ */
+
+.template-minimal {
+    --min-bg: #ffffff;
+    --min-text: #1a1a1a;
+    --min-muted: #666666;
+    --min-accent: #000000;
+    
+    background-color: var(--min-bg);
+    color: var(--min-text);
+    font-family: 'Georgia', serif; /* Elegant serif mix */
+    padding: 6rem 0;
+}
+
+.template-minimal .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.template-minimal h1 {
+    font-size: 3.5rem;
+    font-weight: 400;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.02em;
+}
+
+.template-minimal #hero-title {
+    font-family: 'Inter', sans-serif;
+    color: var(--min-muted);
+    font-size: 1.125rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.template-minimal .minimal-section {
+    margin: 5rem 0;
+}
+
+.template-minimal .label {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--min-muted);
+    margin-bottom: 2rem;
+}
+
+.template-minimal .minimal-projects {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+.template-minimal .project-card {
+    border-top: 1px solid #eee;
+    padding-top: 1.5rem;
+}
+
+.template-minimal .minimal-skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    font-family: 'Inter', sans-serif;
+}
+
+@media (max-width: 640px) {
+    .template-minimal h1 {
+        font-size: 2.5rem;
+    }
+}

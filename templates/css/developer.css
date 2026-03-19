@@ -1,0 +1,118 @@
+/**
+ * Developer Template Styling
+ */
+
+.template-developer {
+    --dev-bg: #0f172a;
+    --dev-surface: #1e293b;
+    --dev-primary: #3b82f6;
+    --dev-text: #f8fafc;
+    --dev-muted: #94a3b8;
+    --dev-border: #334155;
+    
+    background-color: var(--dev-bg);
+    color: var(--dev-text);
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+}
+
+.template-developer .container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.template-developer .section {
+    padding: 5rem 0;
+    border-bottom: 1px solid var(--dev-border);
+}
+
+/* Hero */
+.template-developer .hero {
+    padding: 8rem 0 5rem;
+    text-align: center;
+    background: radial-gradient(circle at top right, rgba(59, 130, 246, 0.1), transparent);
+}
+
+.template-developer h1 {
+    font-size: 4rem;
+    font-weight: 800;
+    letter-spacing: -0.05em;
+    margin-bottom: 0.5rem;
+}
+
+.template-developer .hero-title {
+    font-size: 1.5rem;
+    color: var(--dev-primary);
+    font-weight: 500;
+}
+
+/* Skills */
+.template-developer .skills-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.template-developer .skill-badge {
+    padding: 0.5rem 1.25rem;
+    background-color: var(--dev-surface);
+    border: 1px solid var(--dev-border);
+    border-radius: 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.875rem;
+}
+
+/* Projects */
+.template-developer .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.template-developer .project-card {
+    background-color: var(--dev-surface);
+    border: 1px solid var(--dev-border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: transform 0.2s;
+}
+
+.template-developer .project-card:hover {
+    transform: translateY(-5px);
+    border-color: var(--dev-primary);
+}
+
+/* Timeline */
+.template-developer .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+}
+
+.template-developer .timeline-item {
+    position: relative;
+    padding-left: 1.5rem;
+    border-left: 2px solid var(--dev-border);
+}
+
+.template-developer .timeline-item h4 {
+    color: var(--dev-primary);
+    margin-bottom: 0.25rem;
+}
+
+/* Dual Grid */
+.template-developer .dual-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+}
+
+@media (max-width: 768px) {
+    .template-developer .dual-grid {
+        grid-template-columns: 1fr;
+    }
+    .template-developer h1 {
+        font-size: 2.5rem;
+    }
+}

@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portify Builder | Design Your Portfolio</title>
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/builder.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <script src="js/diagnostic-boot.js?v=10"></script>
+    <script src="js/utils.js?v=10"></script>
+    <script>
+        Utils.requireAuth();
+        Utils.initTheme();
+        
+        // Global Error Tracker
+        window.onerror = function(msg, url, lineNo, columnNo, error) {
+            console.error('Portify Error:', msg, url, lineNo);
+            if (window.Toast) {
+                window.Toast.error('Runtime Error', msg);
+            }
+            return false;
+        };
+        window.onunhandledrejection = function(event) {
+            console.error('Portify Promise Rejection:', event.reason);
+            if (window.Toast) {
+                window.Toast.error('System Error', 'Check console for details');
+            }
+        };
+    </script>
+</head>
+<body data-theme="light">
+    <div class="builder-container">
+        <!-- Left Sidebar: Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-text">Portify</div>
+                <div class="badge badge-primary">Builder</div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul class="nav-list">
+                    <li class="nav-item active" data-section="basic-info">
+                        <iconify-icon icon="solar:user-bold-duotone"></iconify-icon>
+                        <span class="nav-text">Basic Info</span>
+                    </li>
+                    <li class="nav-item" data-section="about">
+                        <iconify-icon icon="solar:document-text-bold-duotone"></iconify-icon>
+                        <span class="nav-text">About Me</span>
+                    </li>
+                    <li class="nav-item" data-section="skills">
+                        <iconify-icon icon="solar:star-bold-duotone"></iconify-icon>
+                        <span class="nav-text">Skills</span>
+                    </li>
+                    <li class="nav-item" data-section="projects">
+                        <iconify-icon icon="solar:folder-bold-duotone"></iconify-icon>
+                        <span class="nav-text">Projects</span>
+                    </li>
+                    <li class="nav-item" data-section="experience">
+                        <iconify-icon icon="solar:case-bold-duotone"></iconify-icon>
+                        <span class="nav-text">Experience</span>
+                    </li>
+                    <li class="nav-item" data-section="education">
+                        <iconify-icon icon="solar:notebook-bold-duotone"></iconify-icon>
+                        <span class="nav-text">Education</span>
+                    </li>
+                    <li class="nav-item" data-section="certifications">
+                        <iconify-icon icon="solar:medal-ribbons-star-bold-duotone"></iconify-icon>
+                        <span class="nav-text">Certifications</span>
+                    </li>
+                    <li class="nav-item" data-section="social">
+                        <iconify-icon icon="solar:share-bold-duotone"></iconify-icon>
+                        <span class="nav-text">Social Links</span>
+                    </li>
+                    <li class="nav-item" data-section="contact">
+                        <iconify-icon icon="solar:phone-bold-duotone"></iconify-icon>
+                        <span class="nav-text">Contact</span>
+                    </li>
+                    <li class="nav-item" data-section="templates">
+                        <iconify-icon icon="solar:gallery-bold-duotone"></iconify-icon>
+                        <span class="nav-text">Template Selection</span>
+                    </li>
+                    <li class="nav-item-logout mt-auto" onclick="Utils.logout()" style="margin-top: auto; padding: 1rem; cursor: pointer; color: var(--text-muted); display: flex; align-items: center; gap: 0.75rem; border-top: 1px solid var(--border-color);">
+                        <iconify-icon icon="solar:logout-bold-duotone"></iconify-icon>
+                        <span class="nav-text">Logout</span>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Center Area: Editor Panel -->
+        <main class="editor-panel">
+            <!-- Section: Basic Info -->
+            <section id="basic-info-section" class="editor-section active">
+                <div class="section-header">
+                    <h2 class="section-title">Basic Information</h2>
+                    <p class="section-description">This is the first thing people will see. Make it count.</p>
+                </div>
+                
+                <div class="editor-card">
+                    <div class="form-group">
+                        <label class="form-label">Profile Image</label>
+                        <div class="upload-widget" id="profile-upload">
+                            <div class="preview-img-container" id="profile-img-preview">
+                                <iconify-icon icon="solar:user-circle-bold" class="upload-icon"></iconify-icon>
+                            </div>
+                            <p class="text-muted">Click to upload or drag and drop</p>
+                            <input type="file" id="profile-input" hidden accept="image/*">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" class="form-control" data-path="basicInfo.name" placeholder="e.g. John Doe">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Professional Title</label>
+                        <input type="text" class="form-control" data-path="basicInfo.title" placeholder="e.g. Principal Product Designer">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Tagline</label>
+                        <input type="text" class="form-control" data-path="basicInfo.tagline" placeholder="e.g. Building digital products that solve real problems.">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Location</label>
+                        <input type="text" class="form-control" data-path="basicInfo.location" placeholder="e.g. San Francisco, CA">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section: About -->
+            <section id="about-section" class="editor-section" style="display: none;">
+                <div class="section-header">
+                    <h2 class="section-title">About Me</h2>
+                    <p class="section-description">Tell your story and highlight your career achievements.</p>
+                </div>
+                
+                <div class="editor-card">
+                    <div class="form-group">
+                        <label class="form-label">Personal Introduction</label>
+                        <textarea class="form-control" rows="4" data-path="about.introduction" placeholder="A brief intro..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Career Summary</label>
+                        <textarea class="form-control" rows="6" data-path="about.careerSummary" placeholder="Summarize your career..."></textarea>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section: Skills -->
+            <section id="skills-section" class="editor-section" style="display: none;">
+                <div class="section-header">
+                    <h2 class="section-title">Skills</h2>
+                    <p class="section-description">Add your technical and creative skills.</p>
+                </div>
+                <div id="skills-list"></div>
+                <button class="btn btn-secondary w-full" id="add-skill-btn">
+                    <iconify-icon icon="solar:add-circle-bold"></iconify-icon>
+                    Add New Skill
+                </button>
+            </section>
+
+            <!-- Section: Projects -->
+            <section id="projects-section" class="editor-section" style="display: none;">
+                <div class="section-header">
+                    <h2 class="section-title">Projects</h2>
+                    <p class="section-description">Showcase your best work with images and links.</p>
+                </div>
+                <div id="projects-list"></div>
+                <button class="btn btn-primary w-full" id="add-project-btn">
+                    <iconify-icon icon="solar:add-circle-bold"></iconify-icon>
+                    Add Project
+                </button>
+            </section>
+
+            <!-- Section: Experience -->
+            <section id="experience-section" class="editor-section" style="display: none;">
+                <div class="section-header">
+                    <h2 class="section-title">Experience</h2>
+                    <p class="section-description">Listing your professional work history.</p>
+                </div>
+                <div id="experience-list"></div>
+                <button class="btn btn-secondary w-full" id="add-experience-btn">
+                    <iconify-icon icon="solar:add-circle-bold"></iconify-icon>
+                    Add Experience
+                </button>
+            </section>
+
+            <!-- Section: Education -->
+            <section id="education-section" class="editor-section" style="display: none;">
+                <div class="section-header">
+                    <h2 class="section-title">Education</h2>
+                    <p class="section-description">Highlight your academic credentials.</p>
+                </div>
+                <div id="education-list"></div>
+                <button class="btn btn-secondary w-full" id="add-education-btn">
+                    <iconify-icon icon="solar:add-circle-bold"></iconify-icon>
+                    Add Education
+                </button>
+            </section>
+
+            <!-- Section: Certifications -->
+            <section id="certifications-section" class="editor-section" style="display: none;">
+                <div class="section-header">
+                    <h2 class="section-title">Certifications</h2>
+                    <p class="section-description">Add any professional certifications or licenses.</p>
+                </div>
+                <div id="certifications-list"></div>
+                <button class="btn btn-secondary w-full" id="add-certification-btn">
+                    <iconify-icon icon="solar:add-circle-bold"></iconify-icon>
+                    Add Certification
+                </button>
+            </section>
+
+            <!-- Section: Social Links -->
+            <section id="social-section" class="editor-section" style="display: none;">
+                <div class="section-header">
+                    <h2 class="section-title">Social Links</h2>
+                    <p class="section-description">Connect your social profiles.</p>
+                </div>
+                <div class="editor-card">
+                    <div class="form-group">
+                        <label class="form-label">GitHub</label>
+                        <input type="text" class="form-control" data-path="socialLinks.github" placeholder="https://github.com/username">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">LinkedIn</label>
+                        <input type="text" class="form-control" data-path="socialLinks.linkedin" placeholder="https://linkedin.com/in/username">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Twitter / X</label>
+                        <input type="text" class="form-control" data-path="socialLinks.twitter" placeholder="https://twitter.com/username">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Instagram</label>
+                        <input type="text" class="form-control" data-path="socialLinks.instagram" placeholder="https://instagram.com/username">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Dribbble</label>
+                        <input type="text" class="form-control" data-path="socialLinks.dribbble" placeholder="https://dribbble.com/username">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Behance</label>
+                        <input type="text" class="form-control" data-path="socialLinks.behance" placeholder="https://behance.net/username">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section: Contact -->
+            <section id="contact-section" class="editor-section" style="display: none;">
+                <div class="section-header">
+                    <h2 class="section-title">Contact Information</h2>
+                    <p class="section-description">How should people reach out to you?</p>
+                </div>
+                <div class="editor-card">
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" class="form-control" data-path="contact.email" placeholder="email@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Phone Number</label>
+                        <input type="tel" class="form-control" data-path="contact.phone" placeholder="+1 (555) 000-0000">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Office / Home Address</label>
+                        <input type="text" class="form-control" data-path="contact.address" placeholder="123 Street Name, City, Country">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section: Templates -->
+            <section id="templates-section" class="editor-section" style="display: none;">
+                <div class="section-header">
+                    <h2 class="section-title">Design & Layout</h2>
+                    <p class="section-description">Choose a design and theme that matches your professional style.</p>
+                </div>
+
+                <div class="settings-group mb-2">
+                    <label class="form-label">Portfolio Theme</label>
+                    <div class="theme-options">
+                        <button class="theme-opt" data-theme="light" onclick="Utils.setTheme('light')">
+                            <iconify-icon icon="solar:sun-bold"></iconify-icon>
+                            Light Mode
+                        </button>
+                        <button class="theme-opt" data-theme="dark" onclick="Utils.setTheme('dark')">
+                            <iconify-icon icon="solar:moon-bold"></iconify-icon>
+                            Dark Mode
+                        </button>
+                    </div>
+                </div>
+
+                <label class="form-label mb-1">Select Layout Template</label>
+                <div class="template-grid">
+                    <!-- Template Card: Modern -->
+                    <div class="template-card active" data-template="modern">
+                        <div class="template-badge">Popular</div>
+                        <div class="template-preview-container mod-preview">
+                            <iconify-icon icon="solar:palet-bold" style="font-size: 3rem;"></iconify-icon>
+                            <div class="template-card-overlay">
+                                <button class="btn-preview-trigger">Quick Preview</button>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <div class="template-tags">
+                                <span class="tag">Modern</span>
+                                <span class="tag">Glassmorphism</span>
+                            </div>
+                            <span class="template-name">Modern Horizon</span>
+                            <p class="template-desc">Premium glass effects and sleek gradients for the modern pro.</p>
+                            <div class="template-status">
+                                <div class="active-check"><iconify-icon icon="solar:check-bold"></iconify-icon></div>
+                                Selected
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Template Card: Developer -->
+                    <div class="template-card" data-template="developer">
+                        <div class="template-preview-container dev-preview">
+                            <iconify-icon icon="solar:code-bold" style="font-size: 3rem;"></iconify-icon>
+                            <div class="template-card-overlay">
+                                <button class="btn-preview-trigger">Quick Preview</button>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <div class="template-tags">
+                                <span class="tag">Developer</span>
+                                <span class="tag">Terminal</span>
+                            </div>
+                            <span class="template-name">Code Pro</span>
+                            <p class="template-desc">A technical, terminal-inspired layout for builders and engineers.</p>
+                            <div class="template-status">
+                                <div class="active-check"><iconify-icon icon="solar:check-bold"></iconify-icon></div>
+                                Selected
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Template Card: Minimal -->
+                    <div class="template-card" data-template="minimal">
+                        <div class="template-preview-container min-preview">
+                            <iconify-icon icon="solar:leaf-bold" style="font-size: 3rem;"></iconify-icon>
+                            <div class="template-card-overlay">
+                                <button class="btn-preview-trigger">Quick Preview</button>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <div class="template-tags">
+                                <span class="tag">Clean</span>
+                                <span class="tag">Minimal</span>
+                            </div>
+                            <span class="template-name">Pure Minimal</span>
+                            <p class="template-desc">Focus on what matters. Typographic elegance and whitespace.</p>
+                            <div class="template-status">
+                                <div class="active-check"><iconify-icon icon="solar:check-bold"></iconify-icon></div>
+                                Selected
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Template Card: Creative -->
+                    <div class="template-card" data-template="creative">
+                        <div class="template-badge">Artistic</div>
+                        <div class="template-preview-container cre-preview">
+                            <iconify-icon icon="solar:magic-stick-bold" style="font-size: 3rem;"></iconify-icon>
+                            <div class="template-card-overlay">
+                                <button class="btn-preview-trigger">Quick Preview</button>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <div class="template-tags">
+                                <span class="tag">Creative</span>
+                                <span class="tag">Bold</span>
+                            </div>
+                            <span class="template-name">Studio Bold</span>
+                            <p class="template-desc">Vibrant layouts for artists, designers, and creative minds.</p>
+                            <div class="template-status">
+                                <div class="active-check"><iconify-icon icon="solar:check-bold"></iconify-icon></div>
+                                Selected
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Template Card: Corporate -->
+                    <div class="template-card" data-template="corporate">
+                        <div class="template-preview-container">
+                            <iconify-icon icon="solar:case-bold" style="font-size: 3rem; color: #475569;"></iconify-icon>
+                            <div class="template-card-overlay">
+                                <button class="btn-preview-trigger">Quick Preview</button>
+                            </div>
+                        </div>
+                        <div class="template-info">
+                            <div class="template-tags">
+                                <span class="tag">Professional</span>
+                                <span class="tag">CV Style</span>
+                            </div>
+                            <span class="template-name">Executive Elite</span>
+                            <p class="template-desc">Structured, reliable, and professional. Perfect for corporate roles.</p>
+                            <div class="template-status">
+                                <div class="active-check"><iconify-icon icon="solar:check-bold"></iconify-icon></div>
+                                Selected
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Spacer for bottom bar -->
+            <div style="height: 100px;"></div>
+        </main>
+
+        <!-- Right Panel: Live Preview -->
+        <aside class="preview-panel">
+            <div class="preview-header">
+                <span class="preview-title">Live Preview</span>
+                <div class="preview-actions">
+                    <button class="btn btn-secondary btn-sm" id="full-preview-btn">
+                        <iconify-icon icon="solar:maximize-bold"></iconify-icon>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="preview-frame">
+                <div id="live-preview-container" class="preview-content">
+                    <!-- Preview HTML will be injected here by preview.js -->
+                    <div style="padding: 2rem; text-align: center; color: var(--text-muted);">
+                        <p>Preview will update as you type...</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Fixed Bottom Action Bar -->
+        <div class="action-bar">
+            <div class="progress-container">
+                <div class="progress-label">
+                    <span>Portfolio Completion</span>
+                    <span id="progress-val">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+            </div>
+            
+            <div class="actions">
+                <button class="btn btn-secondary" id="export-json">Export JSON</button>
+                <button class="btn btn-secondary" id="download-html">Download HTML</button>
+                <button class="btn btn-secondary" id="save-draft-btn">Save Draft</button>
+                <button class="btn btn-primary" id="generate-btn">Generate Portfolio</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/toast.js?v=11"></script>
+    <script src="js/templates-config.js?v=11"></script>
+    <script src="js/template-engine.js?v=11"></script>
+    <script src="js/storage.js?v=11"></script>
+    <script src="js/template-loader.js?v=11"></script>
+    <script src="js/preview-renderer.js?v=11"></script>
+    <script src="js/export-manager.js?v=11"></script>
+    <script src="js/builder.js?v=11"></script>
+</body>
+</html>
+</body>
+</html>

@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Preview | Portify</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@400;600;800&family=Space+Grotesk:wght@300;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { min-height: 100vh; background: #f8fafc; }
+        #preview-root { min-height: 100vh; }
+
+        .preview-controls {
+            position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%);
+            background: rgba(255,255,255,0.9); backdrop-filter: blur(16px);
+            padding: 0.75rem 1.75rem; border-radius: 99px;
+            display: flex; gap: 1.5rem; align-items: center;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.06);
+            z-index: 9999; font-family: 'Inter', sans-serif;
+        }
+        .preview-controls a, .preview-controls button {
+            text-decoration: none; color: #111827; font-size: 0.875rem; font-weight: 600;
+            display: flex; align-items: center; gap: 0.4rem;
+            background: none; border: none; cursor: pointer;
+            transition: opacity 0.2s; font-family: inherit; padding: 0;
+        }
+        .preview-controls a:hover, .preview-controls button:hover { opacity: 0.6; }
+        .ctrl-divider { width: 1px; height: 18px; background: #e5e7eb; }
+
+        .empty-state {
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; min-height: 80vh;
+            text-align: center; font-family: 'Inter', sans-serif; color: #64748b; gap: 1rem;
+        }
+        .empty-state h2 { color: #1e293b; font-size: 1.5rem; }
+        .empty-state p { font-size: 1rem; max-width: 360px; line-height: 1.6; }
+        .empty-state a {
+            display: inline-block; background: #6366f1; color: white;
+            text-decoration: none; padding: 0.75rem 2rem; border-radius: 12px;
+            font-weight: 600; font-size: 0.95rem; margin-top: 0.5rem;
+        }
+        @media print { .preview-controls { display: none !important; } }
+    </style>
+</head>
+<body>
+
+    <!-- Controls -->
+    <div class="preview-controls">
+        <a href="dashboard.html">
+            <iconify-icon icon="solar:home-2-bold-duotone"></iconify-icon> Dashboard
+        </a>
+        <div class="ctrl-divider"></div>
+        <a href="form.html">
+            <iconify-icon icon="solar:pen-2-bold-duotone"></iconify-icon> Edit Portfolio
+        </a>
+        <div class="ctrl-divider"></div>
+        <button onclick="downloadPortfolio()">
+            <iconify-icon icon="solar:download-bold-duotone"></iconify-icon> Download HTML
+        </button>
+        <div class="ctrl-divider"></div>
+        <button onclick="window.print()">
+            <iconify-icon icon="solar:printer-bold-duotone"></iconify-icon> Save as PDF
+        </button>
+    </div>
+
+    <!-- Portfolio renders here -->
+    <div id="preview-root"></div>
+
+    <script>
+    // ─── 1. DATA LOADING ─────────────────────────────────────────────────────────
+    const STORAGE_KEY = 'portify_portfolio_data';
+
+    function loadData() {
+        try {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            if (raw) return JSON.parse(raw);
+        } catch(e) { console.error('[Preview] Failed to parse data:', e); }
+        return null;
+    }
+
+    // ─── 2. TEMPLATE RENDERERS ───────────────────────────────────────────────────
+
+    function renderModern(data) {
+        const bi = data.basicInfo || {};
+        const about = data.about || {};
+        const skills = (data.skills || []).filter(s => s.name);
+        const projects = (data.projects || []).filter(p => p.title);
+        const experience = (data.experience || []).filter(e => e.company || e.role);
+        const education = (data.education || []).filter(e => e.school || e.degree);
+        const social = data.socialLinks || {};
+
+        return `
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+            .pm { --main:#8b5cf6; --sec:#ec4899; --bg:#030712; --surf:rgba(255,255,255,0.04); --text:#f8fafc; --muted:#94a3b8;
+                font-family:'Plus Jakarta Sans',sans-serif; background:var(--bg); color:var(--text);
+                min-height:100vh; padding-bottom:6rem; }
+            .pm-hero { text-align:center; padding:6rem 2rem 4rem; max-width:800px; margin:0 auto; }
+            .pm-badge { display:inline-block; background:rgba(139,92,246,0.15); color:var(--main);
+                border:1px solid rgba(139,92,246,0.3); padding:0.35rem 1rem; border-radius:99px;
+                font-size:0.8rem; font-weight:600; letter-spacing:0.05em; margin-bottom:1.5rem; }
+            .pm-name { font-size:clamp(2.5rem,8vw,5rem); font-weight:800; letter-spacing:-0.03em; margin-bottom:1rem;
+                background:linear-gradient(135deg,#fff 0%,var(--main) 60%,var(--sec) 100%);
+                -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+            .pm-title { font-size:1.25rem; color:var(--main); font-weight:600; margin-bottom:0.75rem; }
+            .pm-tagline { color:var(--muted); font-size:1rem; line-height:1.6; }
+            .pm-social { display:flex; justify-content:center; gap:1rem; margin-top:2rem; flex-wrap:wrap; }
+            .pm-social a { color:var(--muted); text-decoration:none; font-size:0.875rem;
+                display:flex; align-items:center; gap:0.35rem;
+                padding:0.5rem 1rem; border:1px solid rgba(255,255,255,0.1); border-radius:99px;
+                transition:all 0.2s; }
+            .pm-social a:hover { color:var(--main); border-color:var(--main); }
+            .pm-section { max-width:900px; margin:0 auto 5rem; padding:0 2rem; }
+            .pm-label { font-size:0.7rem; text-transform:uppercase; letter-spacing:0.2em; color:var(--main);
+                font-weight:700; margin-bottom:1.5rem; }
+            .pm-glass { background:var(--surf); border:1px solid rgba(255,255,255,0.07);
+                padding:2rem; border-radius:20px; font-size:1.1rem; line-height:1.8; color:var(--muted); }
+            .pm-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:1.5rem; }
+            .pm-card { background:var(--surf); border:1px solid rgba(255,255,255,0.07); padding:1.75rem;
+                border-radius:20px; transition:transform 0.3s,border-color 0.3s; }
+            .pm-card:hover { transform:translateY(-6px); border-color:rgba(139,92,246,0.3); }
+            .pm-card h3 { font-size:1.15rem; font-weight:700; margin-bottom:0.6rem; }
+            .pm-card p { color:var(--muted); font-size:0.9rem; line-height:1.6; margin-bottom:1rem; }
+            .pm-card a { color:var(--main); font-size:0.85rem; text-decoration:none; font-weight:600; }
+            .pm-tags { display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:0.75rem; }
+            .pm-tag { font-size:0.72rem; padding:0.25rem 0.75rem; border-radius:99px;
+                background:rgba(139,92,246,0.12); color:var(--main); }
+            .pm-skills { display:flex; flex-wrap:wrap; gap:0.75rem; }
+            .pm-skill { padding:0.6rem 1.25rem; background:var(--surf); border:1px solid rgba(255,255,255,0.07);
+                border-radius:12px; font-size:0.875rem; font-weight:500; }
+            .pm-exp { padding-left:1.5rem; border-left:2px solid var(--main); margin-bottom:2.5rem; }
+            .pm-exp h3 { font-size:1.1rem; font-weight:700; }
+            .pm-exp-company { color:var(--main); font-size:0.9rem; margin:0.3rem 0; }
+            .pm-exp-dur { color:var(--muted); font-size:0.8rem; }
+            .pm-exp-desc { color:var(--muted); font-size:0.9rem; line-height:1.6; margin-top:0.5rem; }
+            .pm-edu { background:var(--surf); border:1px solid rgba(255,255,255,0.07);
+                padding:1.25rem 1.5rem; border-radius:16px; margin-bottom:1rem; }
+            .pm-edu h3 { font-size:1rem; font-weight:700; }
+            .pm-edu p { color:var(--muted); font-size:0.875rem; margin-top:0.3rem; }
+            .pm-split { display:grid; grid-template-columns:1fr 1fr; gap:3rem;
+                max-width:900px; margin:0 auto 5rem; padding:0 2rem; }
+            @media(max-width:640px){ .pm-split{grid-template-columns:1fr;} }
+        </style>
+        <div class="pm">
+            <div class="pm-hero">
+                ${bi.profileImage
+                    ? `<img src="${bi.profileImage}" class="pm-avatar" alt="${bi.name}">`
+                    : `<div class="pm-avatar-placeholder">👤</div>`
+                }
+                <div class="pm-badge">✦ ${bi.availability || 'Open to Opportunities'}</div>
+                <h1 class="pm-name">${bi.name || 'Your Name'}</h1>
+                <p class="pm-title">${bi.title || ''}</p>
+                ${bi.tagline ? `<p class="pm-tagline">${bi.tagline}</p>` : ''}
+                ${renderSocialLinks(social, 'pm-social')}
+            </div>
+
+            ${(about.introduction || about.careerSummary) ? `
+            <div class="pm-section">
+                <p class="pm-label">About Me</p>
+                <div class="pm-glass">${about.introduction || about.careerSummary}</div>
+            </div>` : ''}
+
+            ${projects.length ? `
+            <div class="pm-section">
+                <p class="pm-label">Featured Projects</p>
+                <div class="pm-grid">
+                    ${projects.map(p => `
+                    <div class="pm-card">
+                        <h3>${p.title}</h3>
+                        ${p.description ? `<p>${p.description}</p>` : ''}
+                        ${p.link ? `<a href="${p.link}" target="_blank">View Project →</a>` : ''}
+                    </div>`).join('')}
+                </div>
+            </div>` : ''}
+
+            <div class="pm-split">
+                ${skills.length ? `
+                <div>
+                    <p class="pm-label">Skills</p>
+                    <div class="pm-skills">
+                        ${skills.map(s => `<span class="pm-skill">${s.name}</span>`).join('')}
+                    </div>
+                </div>` : ''}
+
+                ${experience.length ? `
+                <div>
+                    <p class="pm-label">Experience</p>
+                    ${experience.map(e => `
+                    <div class="pm-exp">
+                        <h3>${e.role || ''}</h3>
+                        <p class="pm-exp-company">${e.company || ''}</p>
+                        ${e.duration ? `<p class="pm-exp-dur">${e.duration}</p>` : ''}
+                        ${e.description ? `<p class="pm-exp-desc">${e.description}</p>` : ''}
+                    </div>`).join('')}
+                </div>` : ''}
+            </div>
+
+            ${education.length ? `
+            <div class="pm-section">
+                <p class="pm-label">Education</p>
+                ${education.map(e => `
+                <div class="pm-edu">
+                    <h3>${e.degree || ''}</h3>
+                    <p>${e.school || ''}${e.year ? ' · ' + e.year : ''}</p>
+                </div>`).join('')}
+            </div>` : ''}
+
+            ${data.contact?.email || data.contact?.phone ? `
+            <div class="pm-section">
+                <p class="pm-label">Contact</p>
+                <div class="pm-glass">
+                    ${data.contact.email ? `<p>📧 ${data.contact.email}</p>` : ''}
+                    ${data.contact.phone ? `<p style="margin-top:0.5rem">📞 ${data.contact.phone}</p>` : ''}
+                </div>
+            </div>` : ''}
+        </div>`;
+    }
+
+    function renderDeveloper(data) {
+        const bi = data.basicInfo || {};
+        const about = data.about || {};
+        const skills = (data.skills || []).filter(s => s.name);
+        const projects = (data.projects || []).filter(p => p.title);
+        const experience = (data.experience || []).filter(e => e.company || e.role);
+
+        return `
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;500;700&display=swap');
+            .pd { --green:#22d3ee; --dim:#0f172a; --text:#e2e8f0; --muted:#64748b; --border:#1e293b;
+                font-family:'Inter',sans-serif; background:var(--dim); color:var(--text); min-height:100vh; padding-bottom:6rem; }
+            .pd-term { font-family:'JetBrains Mono',monospace; }
+            .pd-hero { max-width:900px; margin:0 auto; padding:5rem 2rem 3rem; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:2.5rem; flex-wrap:wrap; }
+            .pd-hero-text { flex:1; min-width:220px; }
+            .pd-avatar { width:90px; height:90px; border-radius:12px; object-fit:cover; border:2px solid var(--green); flex-shrink:0; }
+            .pd-prompt { color:var(--muted); font-size:0.875rem; margin-bottom:1rem; } .pd-prompt span { color:var(--green); }
+            .pd-name { font-size:clamp(2rem,6vw,4rem); font-weight:700; letter-spacing:-0.02em; margin-bottom:0.5rem; }
+            .pd-name::before { content:'> '; color:var(--green); }
+            .pd-title { color:var(--green); font-size:1.1rem; font-family:'JetBrains Mono',monospace; }
+            .pd-section { max-width:900px; margin:3rem auto; padding:0 2rem; }
+            .pd-label { color:var(--green); font-family:'JetBrains Mono',monospace; font-size:0.8rem;
+                margin-bottom:1.25rem; letter-spacing:0.1em; }
+            .pd-label::before { content:'# '; }
+            .pd-bio { background:#0d1117; border:1px solid var(--border); border-left:3px solid var(--green);
+                padding:1.5rem; border-radius:8px; line-height:1.8; color:#94a3b8; font-size:0.95rem; }
+            .pd-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:1rem; }
+            .pd-card { background:#0d1117; border:1px solid var(--border); padding:1.5rem; border-radius:8px;
+                transition:border-color 0.2s; }
+            .pd-card:hover { border-color:var(--green); }
+            .pd-card h3 { color:var(--green); font-family:'JetBrains Mono',monospace; font-size:1rem; margin-bottom:0.5rem; }
+            .pd-card p { color:var(--muted); font-size:0.85rem; line-height:1.6; }
+            .pd-card a { color:var(--green); font-size:0.8rem; text-decoration:none; display:inline-block; margin-top:0.75rem; }
+            .pd-skills { display:flex; flex-wrap:wrap; gap:0.6rem; }
+            .pd-skill { font-family:'JetBrains Mono',monospace; font-size:0.75rem; color:var(--green);
+                border:1px solid rgba(34,211,238,0.25); padding:0.35rem 0.85rem; border-radius:4px;
+                background:rgba(34,211,238,0.05); }
+            .pd-exp { border-left:2px solid var(--green); padding-left:1.25rem; margin-bottom:2rem; }
+            .pd-exp h3 { color:var(--text); font-weight:600; }
+            .pd-exp-co { color:var(--green); font-size:0.85rem; margin:0.25rem 0; }
+            .pd-exp-dur { color:var(--muted); font-size:0.78rem; font-family:'JetBrains Mono',monospace; }
+            .pd-exp-desc { color:var(--muted); font-size:0.875rem; line-height:1.6; margin-top:0.5rem; }
+        </style>
+        <div class="pd">
+            <div class="pd-hero">
+                ${bi.profileImage ? `<img src="${bi.profileImage}" class="pd-avatar" alt="${bi.name}">` : ''}
+                <div class="pd-hero-text">
+                <p class="pd-prompt pd-term"><span>user@portify</span>:~$ whoami</p>
+                <h1 class="pd-name">${bi.name || 'Developer'}</h1>
+                <p class="pd-title">${bi.title || 'Software Engineer'}</p>
+                ${bi.tagline ? `<p style="color:#64748b;margin-top:0.75rem;font-size:0.9rem;">${bi.tagline}</p>` : ''}
+                </div>
+            </div>
+
+            ${(about.introduction || about.careerSummary) ? `
+            <div class="pd-section">
+                <p class="pd-label pd-term">about</p>
+                <div class="pd-bio">${about.introduction || about.careerSummary}</div>
+            </div>` : ''}
+
+            ${skills.length ? `
+            <div class="pd-section">
+                <p class="pd-label pd-term">skills</p>
+                <div class="pd-skills">
+                    ${skills.map(s => `<span class="pd-skill">${s.name}</span>`).join('')}
+                </div>
+            </div>` : ''}
+
+            ${projects.length ? `
+            <div class="pd-section">
+                <p class="pd-label pd-term">projects</p>
+                <div class="pd-cards">
+                    ${projects.map(p => `
+                    <div class="pd-card">
+                        <h3>// ${p.title}</h3>
+                        ${p.description ? `<p>${p.description}</p>` : ''}
+                        ${p.link ? `<a href="${p.link}" target="_blank">→ ${p.link}</a>` : ''}
+                    </div>`).join('')}
+                </div>
+            </div>` : ''}
+
+            ${experience.length ? `
+            <div class="pd-section">
+                <p class="pd-label pd-term">experience</p>
+                ${experience.map(e => `
+                <div class="pd-exp">
+                    <h3>${e.role || ''}</h3>
+                    <p class="pd-exp-co">${e.company || ''}</p>
+                    ${e.duration ? `<p class="pd-exp-dur">${e.duration}</p>` : ''}
+                    ${e.description ? `<p class="pd-exp-desc">${e.description}</p>` : ''}
+                </div>`).join('')}
+            </div>` : ''}
+        </div>`;
+    }
+
+    function renderMinimal(data) {
+        const bi = data.basicInfo || {};
+        const about = data.about || {};
+        const skills = (data.skills || []).filter(s => s.name);
+        const projects = (data.projects || []).filter(p => p.title);
+        const experience = (data.experience || []).filter(e => e.company || e.role);
+        const social = data.socialLinks || {};
+
+        return `
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Inter:wght@400;500&display=swap');
+            .pmin { --accent:#c7a96e; --text:#1a1a1a; --muted:#737373;
+                font-family:'Inter',sans-serif; background:#fafaf9; color:var(--text);
+                padding:6rem max(2rem,8vw); max-width:860px; margin:0 auto; min-height:100vh; }
+            .pmin-header { display:flex; align-items:flex-start; gap:2rem; margin-bottom:0.5rem; flex-wrap:wrap; }
+            .pmin-avatar { width:80px; height:80px; border-radius:50%; object-fit:cover; border:2px solid #c7a96e; flex-shrink:0; }
+            .pmin-header-text { flex:1; }
+            .pmin-name { font-family:'Crimson Pro',Georgia,serif; font-size:clamp(2.5rem,6vw,4rem);
+                font-weight:600; letter-spacing:-0.01em; line-height:1.1; }
+            .pmin-title { color:var(--accent); font-size:0.95rem; font-weight:500; letter-spacing:0.08em;
+                text-transform:uppercase; margin:0.75rem 0 1rem; }
+            .pmin-divider { width:3rem; height:2px; background:var(--accent); margin:2rem 0; }
+            .pmin-label { font-size:0.7rem; text-transform:uppercase; letter-spacing:0.15em;
+                color:var(--muted); font-weight:500; margin-bottom:1.5rem; border-bottom:1px solid #e5e5e5; padding-bottom:0.75rem; }
+            .pmin-section { margin-bottom:4rem; }
+            .pmin-bio { font-family:'Crimson Pro',serif; font-size:1.3rem; line-height:1.8; color:#3a3a3a; }
+            .pmin-skills { display:flex; flex-wrap:wrap; gap:0.5rem; }
+            .pmin-skill { font-size:0.8rem; color:var(--text); border:1px solid #d4d4d4;
+                padding:0.3rem 0.85rem; border-radius:99px; }
+            .pmin-projects { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:2rem; }
+            .pmin-proj { border-top:2px solid var(--accent); padding-top:1.25rem; }
+            .pmin-proj h3 { font-family:'Crimson Pro',serif; font-size:1.25rem; margin-bottom:0.4rem; }
+            .pmin-proj p { font-size:0.875rem; color:var(--muted); line-height:1.6; }
+            .pmin-proj a { font-size:0.8rem; color:var(--accent); text-decoration:none; display:inline-block; margin-top:0.6rem; }
+            .pmin-exp { margin-bottom:2.5rem; }
+            .pmin-exp h3 { font-family:'Crimson Pro',serif; font-size:1.2rem; }
+            .pmin-exp-meta { font-size:0.82rem; color:var(--muted); margin:0.35rem 0; }
+            .pmin-exp-desc { font-size:0.9rem; line-height:1.7; color:#4a4a4a; margin-top:0.4rem; }
+            .pmin-social a { color:var(--muted); text-decoration:none; font-size:0.85rem;
+                margin-right:1.5rem; transition:color 0.2s; }
+            .pmin-social a:hover { color:var(--accent); }
+        </style>
+        <div class="pmin">
+            <div class="pmin-header">
+                ${bi.profileImage ? `<img src="${bi.profileImage}" class="pmin-avatar" alt="${bi.name}">` : ''}
+                <div class="pmin-header-text">
+                    <h1 class="pmin-name">${bi.name || 'Your Name'}</h1>
+                    <p class="pmin-title">${bi.title || ''}</p>
+                    ${bi.tagline ? `<p style="color:#737373;font-size:0.95rem;">${bi.tagline}</p>` : ''}
+                </div>
+            </div>
+            <div class="pmin-divider"></div>
+            ${renderSocialLinks(social, 'pmin-social')}
+
+            ${(about.introduction || about.careerSummary) ? `
+            <div class="pmin-section">
+                <p class="pmin-label">About</p>
+                <p class="pmin-bio">${about.introduction || about.careerSummary}</p>
+            </div>` : ''}
+
+            ${skills.length ? `
+            <div class="pmin-section">
+                <p class="pmin-label">Skills</p>
+                <div class="pmin-skills">
+                    ${skills.map(s => `<span class="pmin-skill">${s.name}</span>`).join('')}
+                </div>
+            </div>` : ''}
+
+            ${projects.length ? `
+            <div class="pmin-section">
+                <p class="pmin-label">Work</p>
+                <div class="pmin-projects">
+                    ${projects.map(p => `
+                    <div class="pmin-proj">
+                        <h3>${p.title}</h3>
+                        ${p.description ? `<p>${p.description}</p>` : ''}
+                        ${p.link ? `<a href="${p.link}" target="_blank">View →</a>` : ''}
+                    </div>`).join('')}
+                </div>
+            </div>` : ''}
+
+            ${experience.length ? `
+            <div class="pmin-section">
+                <p class="pmin-label">Experience</p>
+                ${experience.map(e => `
+                <div class="pmin-exp">
+                    <h3>${e.role || ''} <span style="font-weight:400;font-size:0.9em">@ ${e.company || ''}</span></h3>
+                    <p class="pmin-exp-meta">${e.duration || ''}</p>
+                    ${e.description ? `<p class="pmin-exp-desc">${e.description}</p>` : ''}
+                </div>`).join('')}
+            </div>` : ''}
+        </div>`;
+    }
+
+    function renderCreative(data) {
+        const bi = data.basicInfo || {};
+        const about = data.about || {};
+        const skills = (data.skills || []).filter(s => s.name);
+        const projects = (data.projects || []).filter(p => p.title);
+        const social = data.socialLinks || {};
+
+        return `
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;700&family=Inter:wght@400;600&display=swap');
+            .pcr { --a:#ff6b6b; --b:#ffd93d; --c:#6bcb77; --bg:#0a0a0a; --text:#f5f5f5;
+                font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; padding-bottom:6rem; }
+            .pcr-hero { padding:7rem 2rem 4rem; text-align:center; position:relative; overflow:hidden; }
+            .pcr-hero::before { content:''; position:absolute; inset:0; opacity:0.3;
+                background:radial-gradient(circle at 30% 50%,#ff6b6b44,transparent 60%),radial-gradient(circle at 70% 50%,#6bcb7744,transparent 60%); }
+            .pcr-avatar { width:120px; height:120px; border-radius:50%; object-fit:cover; margin:0 auto 2rem; display:block; position:relative; border:4px solid var(--a); box-shadow:0 0 30px rgba(255,107,107,0.4); }
+            .pcr-name { font-family:'Space Grotesk',sans-serif; font-size:clamp(3rem,10vw,7rem);
+                font-weight:700; line-height:0.9; letter-spacing:-0.04em; position:relative; }
+            .pcr-name span:nth-child(2) { color:var(--a); }
+            .pcr-title { font-size:1.1rem; color:rgba(255,255,255,0.6); margin-top:1.5rem; position:relative; }
+            .pcr-section { max-width:1000px; margin:0 auto 5rem; padding:0 2rem; }
+            .pcr-label { font-size:0.7rem; text-transform:uppercase; letter-spacing:0.2em;
+                color:rgba(255,255,255,0.4); margin-bottom:1.5rem; }
+            .pcr-bio { font-size:1.25rem; line-height:1.7; color:rgba(255,255,255,0.75); }
+            .pcr-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:1.5rem; }
+            .pcr-card { border-radius:20px; padding:2rem; position:relative; overflow:hidden; }
+            .pcr-card:nth-child(3n+1){background:linear-gradient(135deg,#1a0a0a,#3a0a0a);}
+            .pcr-card:nth-child(3n+2){background:linear-gradient(135deg,#0a1a0a,#0a3a1a);}
+            .pcr-card:nth-child(3n+3){background:linear-gradient(135deg,#0a0a1a,#0a0a3a);}
+            .pcr-card h3 { font-size:1.25rem; font-weight:700; margin-bottom:0.6rem; }
+            .pcr-card p { font-size:0.9rem; color:rgba(255,255,255,0.6); line-height:1.6; }
+            .pcr-card a { color:var(--a); font-size:0.85rem; text-decoration:none; display:inline-block; margin-top:0.75rem; }
+            .pcr-skills { display:flex; flex-wrap:wrap; gap:0.75rem; }
+            .pcr-skill { padding:0.5rem 1.25rem; border-radius:99px; font-size:0.85rem; font-weight:600; }
+            .pcr-skill:nth-child(3n+1){background:rgba(255,107,107,0.2);color:#ff6b6b;}
+            .pcr-skill:nth-child(3n+2){background:rgba(107,203,119,0.2);color:#6bcb77;}
+            .pcr-skill:nth-child(3n+3){background:rgba(255,217,61,0.2);color:#ffd93d;}
+        </style>
+        <div class="pcr">
+            <div class="pcr-hero">
+                ${bi.profileImage ? `<img src="${bi.profileImage}" class="pcr-avatar" alt="${bi.name}">` : ''}
+                <h1 class="pcr-name">
+                    ${bi.name ? bi.name.split(' ').map((w,i) => `<span>${w}</span>`).join(' ') : '<span>Your</span> <span>Name</span>'}
+                </h1>
+                <p class="pcr-title">${bi.title || 'Creative Professional'}</p>
+                ${renderSocialLinks(social, '')}
+            </div>
+
+            ${(about.introduction || about.careerSummary) ? `
+            <div class="pcr-section">
+                <p class="pcr-label">About</p>
+                <p class="pcr-bio">${about.introduction || about.careerSummary}</p>
+            </div>` : ''}
+
+            ${skills.length ? `
+            <div class="pcr-section">
+                <p class="pcr-label">What I Do</p>
+                <div class="pcr-skills">
+                    ${skills.map(s => `<span class="pcr-skill">${s.name}</span>`).join('')}
+                </div>
+            </div>` : ''}
+
+            ${projects.length ? `
+            <div class="pcr-section">
+                <p class="pcr-label">Selected Work</p>
+                <div class="pcr-grid">
+                    ${projects.map(p => `
+                    <div class="pcr-card">
+                        <h3>${p.title}</h3>
+                        ${p.description ? `<p>${p.description}</p>` : ''}
+                        ${p.link ? `<a href="${p.link}" target="_blank">View Project →</a>` : ''}
+                    </div>`).join('')}
+                </div>
+            </div>` : ''}
+        </div>`;
+    }
+
+    function renderSocialLinks(social, cls) {
+        const items = Object.entries(social || {}).filter(([,v]) => v);
+        if (!items.length) return '';
+        const icons = { github:'solar:github-bold', linkedin:'solar:link-2-bold',
+            twitter:'solar:letter-bold', website:'solar:globus-bold',
+            instagram:'solar:camera-bold', dribbble:'solar:basketball-bold', behance:'solar:pen-new-square-bold' };
+        return `<div class="${cls}" style="display:flex;flex-wrap:wrap;gap:0.75rem;margin-top:1.5rem;">
+            ${items.map(([k,v]) => `<a href="${v}" target="_blank" rel="noopener"
+                style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:0.35rem;font-size:0.85rem;opacity:0.7;transition:opacity 0.2s;"
+                onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.7">
+                <iconify-icon icon="${icons[k]||'solar:link-bold'}"></iconify-icon>${k}
+            </a>`).join('')}
+        </div>`;
+    }
+
+    // ─── 3. MAIN RENDER ──────────────────────────────────────────────────────────
+    function renderPreview() {
+        const container = document.getElementById('preview-root');
+        const data = loadData();
+
+        console.log('[Portify Preview] Data:', data);
+        console.log('[Portify Preview] Template:', data?.template);
+
+        if (!data || !data.basicInfo?.name) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <div style="font-size:4rem">📋</div>
+                    <h2>No Portfolio Data Yet</h2>
+                    <p>Fill in your details in the builder and click <strong>Generate Portfolio</strong> to see your preview here.</p>
+                    <a href="form.html">Go to Builder →</a>
+                </div>`;
+            return;
+        }
+
+        const template = data.template || 'modern';
+        let html = '';
+
+        if      (template === 'modern')    html = renderModern(data);
+        else if (template === 'developer') html = renderDeveloper(data);
+        else if (template === 'minimal')   html = renderMinimal(data);
+        else if (template === 'creative')  html = renderCreative(data);
+        else                               html = renderModern(data); // default fallback
+
+        container.innerHTML = html;
+        document.title = `${data.basicInfo.name} | Portfolio`;
+        console.log('[Portify Preview] Render complete ✓');
+    }
+
+    // ─── 4. DOWNLOAD ─────────────────────────────────────────────────────────────
+    function downloadPortfolio() {
+        const data = loadData();
+        if (!data) { alert('No portfolio data to download.'); return; }
+
+        const html = document.getElementById('preview-root').innerHTML;
+        const fullHTML = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${data.basicInfo?.name || 'Portfolio'} | Created with Portify</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;600;800&family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@300;700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"><\/script>
+<style>*{box-sizing:border-box;margin:0;padding:0;}body{min-height:100vh;}</style>
+</head><body>${html}</body></html>`;
+
+        const blob = new Blob([fullHTML], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${(data.basicInfo?.name || 'portfolio').toLowerCase().replace(/\s+/g,'-')}-portfolio.html`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    // ─── 5. BOOT ─────────────────────────────────────────────────────────────────
+    window.downloadPortfolio = downloadPortfolio;
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', renderPreview);
+    } else {
+        renderPreview();
+    }
+    </script>
+</body>
+</html>
