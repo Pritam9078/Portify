@@ -257,19 +257,29 @@ const initBuilder = () => {
     // Export JSON
     document.getElementById('export-json')?.addEventListener('click', () => {
         try {
+            // Ensure latest data is saved before export
+            window.storageManager.saveData();
             const data = window.storageManager.data;
-            const dataStr = JSON.stringify(data, null, 2);
+            
+            // Wrap in the requested key for consistency with some industry standards
+            const exportObj = {
+                portfolio_data: data,
+                exported_at: new Date().toISOString(),
+                version: "1.0"
+            };
+            
+            const dataStr = JSON.stringify(exportObj, null, 2);
             const blob = new Blob([dataStr], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             const name = (data.basicInfo?.name || 'portfolio').toLowerCase().replace(/\s+/g, '-');
             a.href = url;
-            a.download = `${name}-portfolio.json`;
+            a.download = `${name}-data.json`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-            window.Toast?.success('Exported!', 'portfolio.json downloaded.');
+            window.Toast?.success('Exported!', 'Portfolio data JSON downloaded.');
         } catch (err) {
             console.error('JSON export failed:', err);
             window.Toast?.error('Export Failed', 'Could not export JSON.');
@@ -279,6 +289,7 @@ const initBuilder = () => {
     // Download HTML
     document.getElementById('download-html')?.addEventListener('click', () => {
         if (window.exportManager) {
+            window.storageManager.saveData();
             window.exportManager.downloadStandaloneHTML(window.storageManager.data);
         } else {
             window.Toast?.error('Not Ready', 'Export module is not loaded.');

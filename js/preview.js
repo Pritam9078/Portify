@@ -86,5 +86,5 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Initial render
-    renderPreview(window.dataManager.data);
+    renderPreview(window.storageManager.data);
 });

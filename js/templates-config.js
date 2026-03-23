@@ -55,5 +55,13 @@ window.PORTIFY_TEMPLATES_MANIFEST = [
         preview_colors: ['#f59e0b', '#0a0a0a', '#fafafa'],
         category: 'light',
         tags: ['light', 'bold', 'high-contrast', 'studio']
+    },
+    {
+        id: 'aetherium',
+        name: 'Aetherium',
+        description: 'Futuristic glassmorphism with cosmic gradients',
+        preview_colors: ['#6366f1', '#a855f7', '#05050f'],
+        category: 'dark',
+        tags: ['premium', 'futuristic', 'glassmorphism', '3d']
     }
 ];

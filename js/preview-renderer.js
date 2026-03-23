@@ -55,18 +55,16 @@ class PreviewRenderer {
             return;
         }
 
-        // Use the full-fidelity template renderers from preview.html if available,
-        // otherwise fall back to the comprehensive in-line renderer below.
-        const template = d.template || 'modern';
-        const templateDef = window.templatesRegistry?.[template];
-
-        if (templateDef && window.TemplateEngine) {
+        // Use the dynamic renderPortfolio function for live preview
+        const template = d.template || 'modern-horizon';
+        
+        if (window.renderPortfolio) {
             try {
-                const html = window.TemplateEngine.render(d, templateDef);
-                this.container.innerHTML = `<div style="height:100%;overflow-y:auto;">${html}</div>`;
+                const html = window.renderPortfolio(d, template);
+                this.container.innerHTML = `<div style="height:100%;overflow-y:auto;width:100%;">${html}</div>`;
                 return;
             } catch(err) {
-                console.warn('[Preview] TemplateEngine failed, using fallback:', err.message);
+                console.warn('[Preview] renderPortfolio failed, using fallback:', err.message);
             }
         }
 

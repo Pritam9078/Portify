@@ -1,19 +1,22 @@
 .builder-container {
-    display: grid;
-    grid-template-columns: 280px 1fr 340px;
+    display: flex;
     height: 100vh;
     overflow: hidden;
     background-color: var(--background);
+    width: 100%;
 }
 
 /* Sidebar Navigation */
 .sidebar {
+    width: 280px;
+    flex-shrink: 0;
     background-color: var(--surface);
     border-right: 1px solid var(--border);
     display: flex;
     flex-direction: column;
     padding: var(--space-md) 0;
     overflow-y: auto;
+    height: 100vh;
 }
 
 .sidebar-header {
@@ -64,12 +67,33 @@
 
 /* Center Editor Panel */
 .editor-panel {
+    flex: 1;
+    min-height: 0;
+    height: 100vh;
     overflow-y: auto;
-    padding: var(--space-xl) var(--space-xxl);
+    overflow-x: hidden;
+    padding: var(--space-xl) var(--space-xxl) 300px;
     scroll-behavior: smooth;
     max-width: 800px;
     margin: 0 auto;
-    width: 100%;
+    position: relative;
+}
+
+.editor-panel::-webkit-scrollbar {
+    width: 10px;
+}
+
+.editor-panel::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.editor-panel::-webkit-scrollbar-thumb {
+    background: rgba(99, 102, 241, 0.2);
+    border-radius: 10px;
+}
+
+.editor-panel::-webkit-scrollbar-thumb:hover {
+    background: rgba(99, 102, 241, 0.4);
 }
 
 .section-header {
@@ -98,6 +122,8 @@
 
 /* Right Preview Panel */
 .preview-panel {
+    width: 340px;
+    flex-shrink: 0;
     background-color: var(--surface);
     border-left: 1px solid var(--border);
     display: flex;
@@ -489,39 +515,19 @@
 
 /* Responsive */
 @media (max-width: 1200px) {
-    .builder-container {
-        grid-template-columns: 240px 1fr 300px;
-    }
+    .sidebar { width: 240px; }
+    .preview-panel { width: 300px; }
 }
 
 @media (max-width: 1024px) {
-    .builder-container {
-        grid-template-columns: 80px 1fr;
-    }
-    .preview-panel {
-        display: none;
-    }
-    .action-bar {
-        right: 0;
-        left: 80px;
-    }
-    .nav-text, .logo-text {
-        display: none;
-    }
-    .nav-item {
-        justify-content: center;
-        padding: 1rem;
-    }
+    .sidebar { width: 80px; }
+    .preview-panel { display: none; }
+    .action-bar { left: 80px; right: 0; }
+    .nav-text, .logo-text { display: none; }
+    .nav-item { justify-content: center; padding: 1rem; }
 }
 
 @media (max-width: 768px) {
-    .builder-container {
-        grid-template-columns: 1fr;
-    }
-    .sidebar {
-        display: none;
-    }
-    .action-bar {
-        left: 0;
-    }
+    .sidebar { display: none; }
+    .action-bar { left: 0; }
 }

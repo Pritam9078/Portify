@@ -6,7 +6,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Auth & User Info
     const currentUser = window.Utils.getCurrentUser();
-    const data = window.dataManager.data;
+    const data = window.storageManager.data;
 
     if (currentUser) {
         const greetName = document.getElementById('greet-name');
@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateCompletionWidget();
 
     function updateCompletionWidget() {
-        const percent = window.dataManager.calculateCompletion();
+        const percent = window.storageManager.getCompletion();
         const percentEl = document.getElementById('completion-percent');
         const fillEl = document.getElementById('completion-fill');
 
@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Export Actions
     document.getElementById('export-json')?.addEventListener('click', (e) => {
         e.preventDefault();
-        const dataStr = JSON.stringify(window.dataManager.data, null, 2);
+        const dataStr = JSON.stringify(window.storageManager.data, null, 2);
         const blob = new Blob([dataStr], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('download-html')?.addEventListener('click', async (e) => {
         e.preventDefault();
-        await window.exportManager.downloadStandaloneHTML(window.dataManager.data);
+        await window.exportManager.downloadStandaloneHTML(window.storageManager.data);
     });
 
     // 6. Update Current Template Info
