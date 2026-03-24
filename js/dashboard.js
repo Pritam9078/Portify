@@ -113,6 +113,18 @@ document.addEventListener('DOMContentLoaded', () => {
         await window.exportManager.downloadStandaloneHTML(window.storageManager.data);
     });
 
+    // Sidebar Export Action
+    document.getElementById('export-btn')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        const dataStr = JSON.stringify(window.storageManager.data, null, 2);
+        const blob = new Blob([dataStr], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `portify-backup-${Date.now()}.json`;
+        a.click();
+    });
+
     // 6. Update Current Template Info
     const templateName = document.getElementById('active-template-name');
     if (templateName) {

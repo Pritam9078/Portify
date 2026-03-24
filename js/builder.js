@@ -38,8 +38,14 @@ const initBuilder = () => {
         });
     });
 
-    // Show initial section
-    window.switchSection('basic-info');
+    // Show initial section (handle URL param if exists)
+    const urlParams = new URLSearchParams(window.location.search);
+    const targetSection = urlParams.get('section');
+    if (targetSection) {
+        window.switchSection(targetSection);
+    } else {
+        window.switchSection('basic-info');
+    }
 
     // ─── 3. FORM INPUT SYNC ─────────────────────────────────────────────────
     const syncInputs = () => {
