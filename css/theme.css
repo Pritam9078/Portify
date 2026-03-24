@@ -4,18 +4,20 @@
  */
 
 :root {
-    /* Light Theme (Default) */
-    --primary: #4f46e5;
-    --primary-hover: #4338ca;
-    --bg-main: #f8fafc;
+    /* Light Theme (Mockup Inspired) */
+    --primary: #6458f5;
+    --primary-hover: #5247e3;
+    --primary-light: #f0efff;
+    --bg-main: #f4f3ee;
     --bg-surface: #ffffff;
     --bg-sidebar: #ffffff;
-    --text-primary: #111827;
-    --text-secondary: #64748b;
-    --text-muted: #94a3b8;
-    --border-color: #e5e7eb;
-    --sidebar-active: rgba(79, 70, 229, 0.08);
-    --input-bg: #ffffff;
+    --text-primary: #1a1a1a;
+    --text-secondary: #666666;
+    --text-muted: #999999;
+    --border-color: #e8e8e8;
+    --sidebar-active: #f0efff;
+    --input-bg: #f3f4f6;
+    --bg-pill: #f3f4f6;
     
     /* Semantic Colors */
     --success: #10b981;
@@ -23,17 +25,17 @@
     --danger: #ef4444;
     --info: #3b82f6;
 
-    /* Shadow & Radius */
-    --shadow-soft: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
-    --shadow-card: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
-    --radius-md: 12px;
-    --radius-sm: 8px;
-    --radius-lg: 16px;
+    /* Shadow & Radius (Softer) */
+    --shadow-soft: 0 2px 10px rgba(0,0,0,0.02);
+    --shadow-card: 0 4px 20px rgba(0,0,0,0.03);
+    --radius-md: 20px;
+    --radius-sm: 12px;
+    --radius-lg: 24px;
     
     /* Layout */
     --sidebar-width: 260px;
-    --navbar-height: 64px;
-    --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    --navbar-height: 72px;
+    --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 [data-theme="dark"] {

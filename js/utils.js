@@ -15,13 +15,22 @@ const Utils = {
 
     saveUser(user) {
         const users = this.getUsers();
+        // Normalize email
+        if (user.email) {
+            user.email = user.email.trim().toLowerCase();
+        }
         users.push(user);
         localStorage.setItem(USERS_DB_KEY, JSON.stringify(users));
     },
 
     login(email, password) {
         const users = this.getUsers();
-        const user = users.find(u => u.email === email && u.password === password);
+        const normalizedEmail = (email || '').trim().toLowerCase();
+        const user = users.find(u => {
+            const storedEmail = (u.email || '').trim().toLowerCase();
+            return storedEmail === normalizedEmail && u.password === password;
+        });
+        
         if (user) {
             localStorage.setItem(AUTH_USER_KEY, JSON.stringify({
                 name: user.name,
