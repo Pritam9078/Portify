@@ -106,8 +106,37 @@ const Utils = {
     formatDate(dateString) {
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
         return new Date(dateString).toLocaleDateString(undefined, options);
+    },
+
+    // --- PRELOADER ---
+    initPreloader() {
+        const preloader = document.getElementById('preloader');
+        if (!preloader) return;
+
+        // Ensure preloader fades out when page is fully loaded
+        const hide = () => {
+            setTimeout(() => {
+                preloader.classList.add('fade-out');
+                setTimeout(() => {
+                    preloader.style.display = 'none';
+                    document.body.classList.remove('loading');
+                }, 600);
+            }, 600); // Small buffer for smooth entrance
+        };
+
+        if (document.readyState === 'complete') {
+            hide();
+        } else {
+            window.addEventListener('load', hide);
+        }
     }
 };
+
+// Global Initialization
+document.addEventListener('DOMContentLoaded', () => {
+    Utils.initTheme();
+    Utils.initPreloader();
+});
 
 // Auto-init theme if not on landing
 if (!window.location.pathname.endsWith('index.html') && window.location.pathname !== '/') {

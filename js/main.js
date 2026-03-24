@@ -1,24 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Theme Initialization
-    if (window.Utils) {
-        window.Utils.initTheme();
-    }
-
-    // 2. Preloader Logic
-    const preloader = document.getElementById('preloader');
-    if (preloader) {
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                preloader.classList.add('fade-out');
-                setTimeout(() => {
-                    preloader.style.display = 'none';
-                    document.body.classList.remove('loading');
-                    // Trigger initial reveals after preloader is gone
-                    initScrollAnimations();
-                }, 800);
-            }, 2000);
-        });
-    }
+    // Theme and Preloader are now handled globally in utils.js
+    initScrollAnimations();
 
     // 3. Scroll Animations (Intersection Observer)
     function initScrollAnimations() {
