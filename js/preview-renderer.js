@@ -62,6 +62,16 @@ class PreviewRenderer {
             try {
                 const html = window.renderPortfolio(d, template);
                 this.container.innerHTML = `<div style="height:100%;overflow-y:auto;width:100%;">${html}</div>`;
+                
+                // CRITICAL: Execute scripts injected via innerHTML
+                const scripts = this.container.querySelectorAll('script');
+                scripts.forEach(oldScript => {
+                    const newScript = document.createElement('script');
+                    Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+                    newScript.textContent = oldScript.textContent;
+                    oldScript.parentNode.replaceChild(newScript, oldScript);
+                });
+                
                 return;
             } catch(err) {
                 console.warn('[Preview] renderPortfolio failed, using fallback:', err.message);

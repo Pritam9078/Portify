@@ -130,6 +130,15 @@
         
         if (window.renderPortfolio) {
             container.innerHTML = window.renderPortfolio(data, template);
+            
+            // CRITICAL: Execute scripts injected via innerHTML
+            const scripts = container.querySelectorAll('script');
+            scripts.forEach(oldScript => {
+                const newScript = document.createElement('script');
+                Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+                newScript.textContent = oldScript.textContent;
+                oldScript.parentNode.replaceChild(newScript, oldScript);
+            });
         } else {
             container.innerHTML = '<div style="padding:2rem;color:#ef4444;">Renderer not found. Check console for details.</div>';
         }
