@@ -8,19 +8,29 @@ Files of interest
 - `css/` and `js/` — styles and client-side scripts
 - `templates/` and `js/templates/` — prebuilt templates and styles
 
-Quick start
+1. **AI-Powered Generation**: Create a full professional portfolio in seconds using Google Gemini 1.5 Flash.
+2. **Professional PDF Export**: High-DPI (2x scale), multi-page PDF generation with optimized print layouts.
+3. **Standalone HTML Download**: Export your portfolio as a single, self-contained website file.
+4. **9+ Professional Sections**: Full support for Projects, Experience, Skills, Certifications, and more.
+5. **Aetherium Template**: Immersive cosmic design with glassmorphism and real-time theme toggles.
 
-1. Open the project in your browser by opening `index.html` directly, or run a simple local server for full functionality:
+## Quick Start
 
-```bash
-# from the repository root
-python3 -m http.server 8000
-# then open http://localhost:8000 in your browser
-```
+1. **Configure Environment**: Create a `.env` file in the root and add your `GEMINI_API_KEY`.
+2. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
+3. **Run the Server**:
+   ```bash
+   node server.js
+   ```
+4. **Access the App**: Open `http://localhost:5001/form.html` in your browser.
 
-Development notes
-- This is a static site — no build step is required. The app relies on client-side JavaScript and localStorage.
-- If you want a live-reload development experience, consider installing an editor extension (Live Server) or using a small Node tool such as `live-server`.
+## Tech Stack
+- **Frontend**: Vanilla JS, HTML5, CSS3 (Glassmorphism), Iconify.
+- **Backend**: Node.js, Express, Google Generative AI SDK (@google/generative-ai).
+- **Export**: html2canvas, jsPDF.
 
 License
 
