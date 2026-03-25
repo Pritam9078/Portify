@@ -90,6 +90,102 @@ window.exportManager = {
     },
 
     /**
+     * Generates and downloads a professional PDF version of the portfolio
+     * @param {string} elementId - ID of the container to capture
+     * @param {string} name - Name for the filename
+     */
+    async downloadPDF(elementId, name = 'portfolio') {
+        const element = document.getElementById(elementId);
+        if (!element) {
+            console.error('Capture element not found:', elementId);
+            return;
+        }
+
+        window.Toast?.info('Preparing PDF', 'Generating high-quality capture...');
+
+        try {
+            // Wait for fonts to be ready
+            await document.fonts.ready;
+
+            // Temporarily prepare element for clean capture (A4 standard)
+            const originalStyles = {
+                width: element.style.width,
+                maxWidth: element.style.maxWidth,
+                margin: element.style.margin,
+                boxShadow: element.style.boxShadow
+            };
+
+            // Fix width to standard A4 pixels at 96dpi (794px) for consistency
+            element.style.width = '794px';
+            element.style.maxWidth = '794px';
+            element.style.margin = '0 auto';
+            element.style.boxShadow = 'none';
+
+            const canvas = await html2canvas(element, {
+                scale: 2, // High DPI for sharp text
+                useCORS: true,
+                allowTaint: false,
+                logging: false,
+                backgroundColor: '#ffffff',
+                windowWidth: 794
+            });
+
+            // Restore original styles
+            Object.assign(element.style, originalStyles);
+
+            const imgData = canvas.toDataURL('image/jpeg', 0.95);
+            const { jsPDF } = window.jspdf;
+            
+            const pdf = new jsPDF({
+                orientation: 'portrait',
+                unit: 'mm',
+                format: 'a4',
+                compress: true
+            });
+
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = pdf.internal.pageSize.getHeight();
+            
+            const imgWidthPx = canvas.width;
+            const imgHeightPx = canvas.height;
+            
+            const ratio = pdfWidth / imgWidthPx;
+            const imgHeightMm = imgHeightPx * ratio;
+
+            let heightLeft = imgHeightMm;
+            let position = 0;
+
+            // Add first page
+            pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, imgHeightMm);
+            heightLeft -= pdfHeight;
+
+            // Add additional pages if content is long
+            while (heightLeft > 0) {
+                position = heightLeft - imgHeightMm;
+                pdf.addPage();
+                pdf.addImage(imgData, 'JPEG', 0, position, pdfWidth, imgHeightMm);
+                heightLeft -= pdfHeight;
+            }
+
+            const timestamp = Math.floor(Date.now() / 1000);
+            const safeName = name.toLowerCase().trim().replace(/[^a-z0-9]/g, '-');
+            pdf.save(`portify-${safeName}-${timestamp}.pdf`);
+
+            window.Toast?.success('PDF Ready', 'Your professional portfolio has been saved.');
+        } catch (error) {
+            console.error('PDF generation failed:', error);
+            window.Toast?.error('PDF Error', 'Failed to generate PDF. Try printing manually.');
+            
+            // Cleanup on error
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.style.width = '';
+                element.style.maxWidth = '';
+            }
+        }
+    },
+
+    /**
      * Escapes HTML special characters
      * @param {string} str - String to escape
      * @returns {string} - Escaped string

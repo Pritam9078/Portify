@@ -17,6 +17,11 @@
     <script src="js/templates/aetherium.js?v=1"></script>
     <script src="js/templates-config.js?v=13"></script>
     <script src="js/portfolio-renderer.js?v=1"></script>
+    
+    <!-- PDF Export Dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
     <script src="js/export-manager.js?v=1"></script>
 
     <style>
@@ -54,6 +59,16 @@
             font-weight: 600; font-size: 0.95rem; margin-top: 0.5rem;
         }
         @media print { .preview-controls { display: none !important; } }
+
+        /* PDF Export Optimizations */
+        #preview-root section, 
+        #preview-root .card, 
+        #preview-root .project-item,
+        #preview-root .experience-item {
+            page-break-inside: avoid;
+            break-inside: avoid;
+            -webkit-column-break-inside: avoid;
+        }
     </style>
 </head>
 <body>
@@ -68,12 +83,12 @@
             <iconify-icon icon="solar:pen-2-bold-duotone"></iconify-icon> Edit Portfolio
         </a>
         <div class="ctrl-divider"></div>
-        <button onclick="downloadPortfolio()">
-            <iconify-icon icon="solar:download-bold-duotone"></iconify-icon> Download HTML
+        <button id="btn-download-html">
+            <iconify-icon icon="solar:html-bold-duotone" style="color: #e34c26;"></iconify-icon> Download HTML
         </button>
         <div class="ctrl-divider"></div>
-        <button onclick="window.print()">
-            <iconify-icon icon="solar:printer-bold-duotone"></iconify-icon> Save as PDF
+        <button id="btn-download-pdf">
+            <iconify-icon icon="solar:file-download-bold-duotone" style="color: #ff3e00;"></iconify-icon> Save as PDF
         </button>
     </div>
 
@@ -124,25 +139,42 @@
     }
 
     // ─── 4. DOWNLOAD ─────────────────────────────────────────────────────────────
-    function downloadPortfolio() {
-        const data = loadData();
-        if (!data) { alert('No portfolio data to download.'); return; }
+    function initExportActions() {
+        const btnHtml = document.getElementById('btn-download-html');
+        const btnPdf = document.getElementById('btn-download-pdf');
 
-        if (window.exportManager) {
-            window.exportManager.downloadStandaloneHTML(data);
-        } else {
-            console.error('[Preview] exportManager not found');
-            alert('Export manager not ready.');
+        if (btnHtml) {
+            btnHtml.addEventListener('click', () => {
+                const data = loadData();
+                if (!data) return alert('No data found.');
+                
+                if (window.exportManager) {
+                    window.exportManager.downloadStandaloneHTML(data);
+                }
+            });
+        }
+
+        if (btnPdf) {
+            btnPdf.addEventListener('click', () => {
+                const data = loadData();
+                if (!data) return alert('No data found.');
+
+                if (window.exportManager && window.exportManager.downloadPDF) {
+                    window.exportManager.downloadPDF('preview-root', data.basicInfo?.name || 'portfolio');
+                }
+            });
         }
     }
 
     // ─── 5. BOOT ─────────────────────────────────────────────────────────────────
-    window.downloadPortfolio = downloadPortfolio;
-
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', renderPreview);
+        document.addEventListener('DOMContentLoaded', () => {
+            renderPreview();
+            initExportActions();
+        });
     } else {
         renderPreview();
+        initExportActions();
     }
     </script>
 </body>

@@ -14,6 +14,7 @@
     <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
     <script src="js/diagnostic-boot.js?v=10"></script>
     <script src="js/utils.js?v=10"></script>
+    <script src="js/ai-generator.js?v=10"></script>
     <script>
         Utils.requireAuth();
         Utils.initTheme();
@@ -56,6 +57,10 @@
             
             <nav class="sidebar-nav">
                 <ul class="nav-list">
+                    <li class="nav-item-ai" id="ai-assistant-btn">
+                        <iconify-icon icon="solar:magic-stick-3-bold-duotone"></iconify-icon>
+                        <span class="nav-text">Magic AI</span>
+                    </li>
                     <li class="nav-item active" data-section="basic-info">
                         <iconify-icon icon="solar:user-bold-duotone"></iconify-icon>
                         <span class="nav-text">Basic Info</span>
@@ -495,16 +500,41 @@
         </div>
     </div>
 
+    <!-- AI Assistant Modal -->
+    <div class="ai-modal-overlay" id="ai-modal-overlay">
+        <div class="ai-modal">
+            <!-- Loading State -->
+            <div class="ai-generating-overlay" id="ai-loading">
+                <div class="ai-loader"></div>
+                <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Magic is happening...</h3>
+                <p class="text-muted">Claude is crafting your professional portfolio data.</p>
+            </div>
+
+            <div class="ai-modal-header">
+                <h2>✨ AI Portfolio Assistant</h2>
+                <p>Describe your role, experience, and key projects.</p>
+            </div>
+            <div class="ai-modal-body">
+                <textarea class="ai-prompt-input" id="ai-prompt" placeholder="e.g. I am a Senior Frontend Developer specializing in React and Next.js. I have worked at Google for 3 years and built several high-performance web apps..."></textarea>
+                <div class="ai-modal-footer">
+                    <button class="ai-btn-cancel" id="ai-cancel">Cancel</button>
+                    <button class="ai-btn-generate" id="ai-generate-confirm">
+                        <iconify-icon icon="solar:magic-stick-3-bold"></iconify-icon>
+                        Generate Portfolio
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script src="js/toast.js?v=13"></script>
-    <!-- 5 Dedicated Template Files -->
     <script src="js/templates/modern-horizon.js?v=1"></script>
     <script src="js/templates/code-pro.js?v=1"></script>
     <script src="js/templates/pure-minimal.js?v=1"></script>
     <script src="js/templates/artistic.js?v=1"></script>
     <script src="js/templates/studio-bold.js?v=1"></script>
     <script src="js/templates/aetherium.js?v=1"></script>
-    <!-- Core scripts -->
     <script src="js/templates-config.js?v=13"></script>
     <script src="js/template-engine.js?v=13"></script>
     <script src="js/storage.js?v=13"></script>
